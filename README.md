@@ -12,3 +12,16 @@ TntMPD should go wrong. If you want to save space you can safely delete
 the $HOME/wineTntMPD/.git subdirectory.
 
 The current script builds and installs wine 1.7.6 and TntMPD 3.0.21.
+
+==Installation
+
+Wine only builds on 32-bit systems. The easiest way to get it working
+is probably to install a 32-bit virtual machine.
+
+You need at least 2GB of free disk space to build and install wine and
+TntMPD.
+
+Copy the build.sh to a directory and run it. This will clone and build the
+wine source code, install wine into $HOME/wineTntMPD and then download and
+install TntMPD. During the installation of TntMPD the setup program will
+download and install some additional required components.

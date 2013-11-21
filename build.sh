@@ -15,6 +15,10 @@ fi
 
 THISDIR=$(dirname $(readlink -f "$0"))
 
+echo "Installing dependencies"
+sudo apt-get update
+sudo apt-get install git flex
+
 if [ -d $TARGET_DIR ]; then
 	cd $TARGET_DIR
 	if [ -d .git ]; then

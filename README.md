@@ -13,7 +13,8 @@ the $HOME/wineTntMPD/.git subdirectory.
 
 The current script builds and installs wine 1.7.6 and TntMPD 3.0.21.
 
-==Installation
+Installation
+------------
 
 Wine only builds on 32-bit systems. The easiest way to get it working
 is probably to install a 32-bit virtual machine.

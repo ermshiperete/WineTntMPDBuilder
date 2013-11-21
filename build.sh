@@ -15,12 +15,21 @@ fi
 
 THISDIR=$(dirname $(readlink -f "$0"))
 
-if [ ! -d wine ]; then
+if [ -d $TARGET_DIR ]; then
+	cd $TARGET_DIR
+	if [ -d .git ]; then
+		git reset --hard
+		git clean -dxf
+	fi
+fi
+
+if [ ! -d $THISDIR/wine ]; then
+	cd $THISDIR
 	echo "Cloning Wine source code"
 	git clone git://source.winehq.org/git/wine.git
-fi	
+fi
 
-cd wine
+cd $THISDIR/wine
 echo "Updating Wine source code"
 git checkout master
 git reset --hard
@@ -35,30 +44,36 @@ echo "Installing Wine"
 make install
 
 cd $TARGET_DIR
-git init .
+if [ ! -d .git ]; then
+	git init .
+fi
 git add --all
 git commit -m "Installation of Wine $WINE_VERSION"
 
-echo "Installing helper scripts"
-cat > environ <<ENDOFENVIRON
-PATH="$TARGET_DIR/bin:\$PATH"
-export WINEPREFIX=$TARGET_DIR/.wine
-ENDOFENVIRON
+if [ ! -f environ ]; then
+	echo "Installing helper scripts"
+	cat > environ <<-ENDOFENVIRON
+	PATH="$TARGET_DIR/bin:\$PATH"
+	export WINEPREFIX=$TARGET_DIR/.wine
+	ENDOFENVIRON
+fi
 
-cat > tntmpd <<ENDOFSTARTUP
-#!/bin/bash
-cd $(dirname "$0")
-. environ
-wine .wine/drive_c/Program\ Files/TntWare/TntMPD/TntMPD.exe 2> /dev/null
-ENDOFSTARTUP
+if [ ! -f tntmpd ]; then
+	cat > tntmpd <<-ENDOFSTARTUP
+	#!/bin/bash
+	cd $(dirname "$0")
+	. environ
+	wine .wine/drive_c/Program\ Files/TntWare/TntMPD/TntMPD.exe 2> /dev/null
+	ENDOFSTARTUP
+	chmod +x tntmpd
+fi
 
-chmod +x tntmpd
 git add --all
 git commit -m "Add startup scripts"
 
 echo "Downloading TntMPD"
 cd $THISDIR
-mkdir downloads
+mkdir -p downloads
 cd downloads
 wget http://download.tntware.com/tntmpd/archive/$TNTMPD_VERSION/SetupTntMPD.exe
 
@@ -73,5 +88,3 @@ git commit -m "Installation of TntMPD $TNTMPD_VERSION"
 
 echo "Finished."
 echo "You can now run $TARGET_DIR/tntmpd to start TntMPD."
-
-

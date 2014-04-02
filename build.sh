@@ -16,8 +16,7 @@ fi
 THISDIR=$(dirname $(readlink -f "$0"))
 
 echo "Installing dependencies"
-sudo apt-get update
-sudo apt-get install git flex
+sudo apt-get build-dep wine
 
 if [ -d $TARGET_DIR ]; then
 	cd $TARGET_DIR
